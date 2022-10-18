@@ -15,6 +15,7 @@ async function run(){
     try{
         await client.connect();
         const booksCollection=client.db('book-spot').collection('books');
+        const orderCollection=client.db('book-spot').collection('order');
 
         app.get('/book', async(req, res)=>{
             const query={};
@@ -28,6 +29,25 @@ async function run(){
             const filter= await booksCollection.findOne(query);
             res.send(filter)
         })
+
+        //order collection
+
+        app.get('/order', async(req, res)=>{
+            const email=req.query.email;
+            const  query={email:email};
+            const cursor =orderCollection.find(query);
+            const orders= await cursor.toArray();
+            res.send(orders);
+        })
+
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            console.log(order)
+            console.log(req.body)
+            const result = await orderCollection.insertOne(order);
+            res.send(result);
+        })
+
     }
     finally{
 
