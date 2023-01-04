@@ -30,6 +30,22 @@ async function run(){
             res.send(filter)
         })
 
+        //add a book
+
+        app.post('/book', async(req, res)=>{
+            const book= req.body;
+            const result = await booksCollection.insertOne(book);
+            res.send(result);
+        })
+
+        //delete a book
+        app.delete('/book/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await booksCollection.deleteOne(query);
+            res.send(result);
+        })
+
         //order collection
 
         app.get('/order', async(req, res)=>{
@@ -42,8 +58,6 @@ async function run(){
 
         app.post('/order', async (req, res) => {
             const order = req.body;
-            console.log(order)
-            console.log(req.body)
             const result = await orderCollection.insertOne(order);
             res.send(result);
         })
